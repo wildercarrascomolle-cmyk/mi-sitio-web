@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Formulario HTML5 para enviar el Curriculum Vitae">
+  <title>Enviar Curriculum Vitae</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 30px 15px;
+      background: #eceff1;
+      font-family: Georgia, "Times New Roman", serif;
+      color: #222;
+    }
+    .cv {
+      max-width: 820px;
+      margin: 0 auto;
+      background: #fff;
+      border: 3px double #9e9e9e;
+      box-shadow: 0 4px 14px rgba(0,0,0,.12);
+    }
+    /* Encabezado con título y foto */
+    .cv-header {
+      display: grid;
+      grid-template-columns: 1fr 150px;
+      border-bottom: 1px solid #9e9e9e;
+    }
+    .cv-header h1 {
+      margin: 0;
+      padding: 40px 20px;
+      text-align: center;
+      font-size: 2rem;
+      letter-spacing: 2px;
+    }
+    .foto {
+      border-left: 1px solid #9e9e9e;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 10px;
+    }
+    .foto-marco {
+      width: 100px;
+      height: 120px;
+      border: 2px solid #9e9e9e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      font-size: .85rem;
+      cursor: pointer;
+      overflow: hidden;
+      background: #fafafa;
+    }
+    .foto-marco img { width: 100%; height: 100%; object-fit: cover; }
+    .foto input { display: none; }
+    .foto small { font-size: .7rem; color: #666; margin-top: 4px; text-align: center; }
+
+    form { padding: 10px 35px 30px; }
+    fieldset { border: none; margin: 25px 0 0; padding: 0; }
+    legend {
+      width: 100%;
+      font-size: 1.3rem;
+      font-weight: bold;
+      text-transform: uppercase;
+      padding-bottom: 4px;
+      border-bottom: 1px solid #9e9e9e;
+      margin-bottom: 12px;
+    }
+    .fila {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px 30px;
+    }
+    .campo { display: flex; flex-direction: column; margin-bottom: 10px; }
+    .campo.completo { grid-column: 1 / -1; }
+    label { font-size: .95rem; margin-bottom: 3px; }
+    label .req { color: #c62828; }
+    input, select, textarea {
+      font: inherit;
+      font-size: .95rem;
+      padding: 6px 8px;
+      border: 1px solid #bdbdbd;
+      border-radius: 3px;
+      background: #fcfcfc;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: #1565c0;
+      box-shadow: 0 0 0 2px rgba(21,101,192,.15);
+    }
+    input:invalid:not(:placeholder-shown) { border-color: #c62828; }
+    textarea { resize: vertical; min-height: 60px; }
+    .checks { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: .95rem; }
+    .checks label { display: flex; align-items: center; gap: 5px; margin: 0; }
+
+    .experiencia {
+      border: 1px dashed #bdbdbd;
+      padding: 12px 14px 4px;
+      margin-bottom: 12px;
+      position: relative;
+    }
+    .experiencia .quitar {
+      position: absolute; top: 6px; right: 8px;
+      border: none; background: none; color: #c62828;
+      cursor: pointer; font-size: 1.1rem;
+    }
+    .btn {
+      font: inherit;
+      padding: 8px 18px;
+      border-radius: 3px;
+      border: 1px solid #1565c0;
+      cursor: pointer;
+    }
+    .btn-sec { background: #fff; color: #1565c0; }
+    .btn-pri { background: #1565c0; color: #fff; }
+    .btn-gris { background: #fff; color: #555; border-color: #9e9e9e; }
+
+    .declaracion {
+      margin-top: 25px;
+      font-size: .95rem;
+    }
+    .acciones {
+      margin-top: 25px;
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+    }
+    #mensaje {
+      display: none;
+      margin: 20px 35px 30px;
+      padding: 15px;
+      border: 1px solid #2e7d32;
+      background: #e8f5e9;
+      color: #1b5e20;
+    }
+    footer {
+      text-align: center;
+      font-size: .8rem;
+      color: #777;
+      margin-top: 15px;
+    }
+    @media (max-width: 620px) {
+      .cv-header { grid-template-columns: 1fr; }
+      .foto { border-left: none; border-top: 1px solid #9e9e9e; }
+      .fila { grid-template-columns: 1fr; }
+      form { padding: 10px 18px 25px; }
+    }
+  </style>
+</head>
+<body>
+
+  <main class="cv">
+    <header class="cv-header">
+      <h1>CURRICULUM VITAE</h1>
+      <div class="foto">
+        <label for="foto" class="foto-marco" id="marcoFoto" title="Haga clic para subir su foto">FOTO</label>
+        <small>Clic para subir (JPG/PNG)</small>
+      </div>
+    </header>
+
+    <form id="formCV" action="#" method="post" enctype="multipart/form-data" autocomplete="on">
+      <input type="file" id="foto" name="foto" accept="image/png, image/jpeg" form="formCV" hidden>
+
+      <!-- ============ DATOS PERSONALES ============ -->
+      <fieldset>
+        <legend>Datos personales</legend>
+        <div class="fila">
+          <div class="campo">
+            <label for="apellidos">Apellidos: <span class="req">*</span></label>
+            <input type="text" id="apellidos" name="apellidos" required placeholder=" " maxlength="60">
+          </div>
+          <div class="campo">
+            <label for="nombre">Nombre: <span class="req">*</span></label>
+            <input type="text" id="nombre" name="nombre" required placeholder=" " maxlength="60">
+          </div>
+          <div class="campo">
+            <label for="dni">DNI: <span class="req">*</span></label>
+            <input type="text" id="dni" name="dni" required pattern="[0-9]{8}" maxlength="8"
+                   inputmode="numeric" placeholder="8 dígitos" title="Ingrese los 8 dígitos de su DNI">
+          </div>
+          <div class="campo">
+            <label for="sexo">Sexo:</label>
+            <select id="sexo" name="sexo">
+              <option value="">-- Seleccione --</option>
+              <option>Masculino</option>
+              <option>Femenino</option>
+              <option>Prefiero no indicarlo</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label for="fechaNac">Fecha de nacimiento: <span class="req">*</span></label>
+            <input type="date" id="fechaNac" name="fecha_nacimiento" required>
+          </div>
+          <div class="campo">
+            <label for="lugarNac">Lugar:</label>
+            <input type="text" id="lugarNac" name="lugar_nacimiento" placeholder=" ">
+          </div>
+          <div class="campo completo">
+            <label for="direccion">Dirección:</label>
+            <input type="text" id="direccion" name="direccion" placeholder=" ">
+          </div>
+          <div class="campo">
+            <label for="localidad">Localidad:</label>
+            <input type="text" id="localidad" name="localidad" placeholder=" ">
+          </div>
+          <div class="campo">
+            <label for="provincia">Provincia:</label>
+            <input type="text" id="provincia" name="provincia" list="listaProvincias" placeholder=" ">
+            <datalist id="listaProvincias">
+              <option value="Lima">
+              <option value="Arequipa">
+              <option value="Cusco">
+              <option value="Trujillo">
+              <option value="Piura">
+              <option value="Chiclayo">
+            </datalist>
+          </div>
+          <div class="campo">
+            <label for="telefono">Teléfono:</label>
+            <input type="tel" id="telefono" name="telefono" placeholder="(01) 1234567">
+          </div>
+          <div class="campo">
+            <label for="movil">Teléfono móvil: <span class="req">*</span></label>
+            <input type="tel" id="movil" name="movil" required pattern="9[0-9]{8}"
+                   placeholder="9XXXXXXXX" title="9 dígitos, empezando con 9">
+          </div>
+          <div class="campo">
+            <label for="email">E-mail: <span class="req">*</span></label>
+            <input type="email" id="email" name="email" required placeholder="usuario@correo.com">
+          </div>
+          <div class="campo">
+            <label for="web">Página web / LinkedIn:</label>
+            <input type="url" id="web" name="web" placeholder="https://">
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- ============ FORMACIÓN Y ESTUDIOS ============ -->
+      <fieldset>
+        <legend>Formación y estudios</legend>
+        <div class="fila">
+          <div class="campo">
+            <label for="nivel">Nivel de estudios: <span class="req">*</span></label>
+            <select id="nivel" name="nivel_estudios" required>
+              <option value="">-- Seleccione --</option>
+              <option>Secundaria completa</option>
+              <option>Técnico</option>
+              <option>Universitario (en curso)</option>
+              <option>Bachiller</option>
+              <option>Titulado</option>
+              <option>Maestría</option>
+              <option>Doctorado</option>
+            </select>
+          </div>
+          <div class="campo">
+            <label for="titulacion">Titulación:</label>
+            <input type="text" id="titulacion" name="titulacion" placeholder="Ej.: Ingeniería de Sistemas">
+          </div>
+          <div class="campo">
+            <label for="institucion">Institución:</label>
+            <input type="text" id="institucion" name="institucion" placeholder=" ">
+          </div>
+          <div class="campo">
+            <label for="anioEgreso">Año de egreso:</label>
+            <input type="number" id="anioEgreso" name="anio_egreso" min="1960" max="2030" placeholder="AAAA">
+          </div>
+          <div class="campo completo">
+            <label>Idiomas:</label>
+            <div class="checks">
+              <label><input type="checkbox" name="idiomas[]" value="Español" checked> Español</label>
+              <label><input type="checkbox" name="idiomas[]" value="Inglés"> Inglés</label>
+              <label><input type="checkbox" name="idiomas[]" value="Portugués"> Portugués</label>
+              <label><input type="checkbox" name="idiomas[]" value="Francés"> Francés</label>
+              <label><input type="checkbox" name="idiomas[]" value="Quechua"> Quechua</label>
+            </div>
+          </div>
+          <div class="campo">
+            <label for="nivelIngles">Nivel de inglés:</label>
+            <input type="range" id="nivelIngles" name="nivel_ingles" min="0" max="5" value="0"
+                   oninput="valorIngles.value = ['Ninguno','Básico','Pre-intermedio','Intermedio','Avanzado','Nativo'][this.value]">
+            <output id="valorIngles" for="nivelIngles">Ninguno</output>
+          </div>
+          <div class="campo">
+            <label for="informatica">Conocimientos informáticos:</label>
+            <input type="text" id="informatica" name="conocimientos_informaticos"
+                   placeholder="Office, HTML, Java, SQL...">
+          </div>
+          <div class="campo completo">
+            <label for="cursos">Cursos y seminarios:</label>
+            <textarea id="cursos" name="cursos" rows="3"
+                      placeholder="Nombre del curso – institución – año"></textarea>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- ============ EXPERIENCIA PROFESIONAL ============ -->
+      <fieldset>
+        <legend>Experiencia profesional</legend>
+        <div id="listaExperiencia">
+          <div class="experiencia">
+            <div class="fila">
+              <div class="campo completo">
+                <label>Empresa:</label>
+                <input type="text" name="empresa[]" placeholder=" ">
+              </div>
+              <div class="campo">
+                <label>Fecha de inicio:</label>
+                <input type="month" name="fecha_inicio[]">
+              </div>
+              <div class="campo">
+                <label>Fecha de fin:</label>
+                <input type="month" name="fecha_fin[]">
+              </div>
+              <div class="campo completo">
+                <label>Puesto / Actividad desarrollada:</label>
+                <textarea name="puesto[]" rows="2" placeholder=" "></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button type="button" class="btn btn-sec" id="agregarExp">+ Añadir otra experiencia</button>
+      </fieldset>
+
+      <!-- ============ DATOS COMPLEMENTARIOS ============ -->
+      <fieldset>
+        <legend>Datos complementarios</legend>
+        <div class="fila">
+          <div class="campo">
+            <label>Disponibilidad:</label>
+            <div class="checks">
+              <label><input type="radio" name="disponibilidad" value="Inmediata" checked> Inmediata</label>
+              <label><input type="radio" name="disponibilidad" value="15 días"> 15 días</label>
+              <label><input type="radio" name="disponibilidad" value="30 días"> 30 días</label>
+            </div>
+          </div>
+          <div class="campo">
+            <label>Licencia de conducir:</label>
+            <div class="checks">
+              <label><input type="radio" name="licencia" value="Sí"> Sí</label>
+              <label><input type="radio" name="licencia" value="No" checked> No</label>
+            </div>
+          </div>
+          <div class="campo">
+            <label for="pretension">Pretensión salarial (S/):</label>
+            <input type="number" id="pretension" name="pretension_salarial" min="0" step="50" placeholder="0.00">
+          </div>
+          <div class="campo">
+            <label for="archivoCV">Adjuntar CV (PDF):</label>
+            <input type="file" id="archivoCV" name="archivo_cv" accept=".pdf">
+          </div>
+          <div class="campo completo">
+            <label for="complementarios">Otros datos de interés:</label>
+            <textarea id="complementarios" name="datos_complementarios" rows="3"
+                      placeholder="Voluntariados, logros, referencias, etc."></textarea>
+          </div>
+        </div>
+      </fieldset>
+
+      <!-- ============ DECLARACIÓN ============ -->
+      <div class="declaracion">
+        <p>Todo lo expuesto anteriormente podrá ser acreditado, en caso de solicitud.</p>
+        <div class="fila">
+          <div class="campo">
+            <label for="lugarFirma">Lugar: <span class="req">*</span></label>
+            <input type="text" id="lugarFirma" name="lugar_firma" required placeholder=" ">
+          </div>
+          <div class="campo">
+            <label for="fechaFirma">Fecha: <span class="req">*</span></label>
+            <input type="date" id="fechaFirma" name="fecha_firma" required>
+          </div>
+        </div>
+        <div class="checks">
+          <label><input type="checkbox" name="acepto" required>
+            Declaro que los datos son verídicos y autorizo su tratamiento. <span class="req">*</span></label>
+        </div>
+      </div>
+
+      <div class="acciones">
+        <button type="reset" class="btn btn-gris">Limpiar</button>
+        <button type="submit" class="btn btn-pri">Enviar currículo</button>
+      </div>
+    </form>
+
+    <div id="mensaje" role="status"></div>
+  </main>
+
+  <footer>Los campos marcados con <span style="color:#c62828">*</span> son obligatorios.</footer>
+
+  <script>
+    // Vista previa de la foto
+    const inputFoto = document.getElementById('foto');
+    const marco = document.getElementById('marcoFoto');
+    inputFoto.addEventListener('change', () => {
+      const archivo = inputFoto.files[0];
+      if (!archivo) return;
+      const lector = new FileReader();
+      lector.onload = e => marco.innerHTML = '<img src="' + e.target.result + '" alt="Foto del postulante">';
+      lector.readAsDataURL(archivo);
+    });
+
+    // Fecha de firma por defecto: hoy
+    document.getElementById('fechaFirma').valueAsDate = new Date();
+
+    // Añadir / quitar bloques de experiencia
+    const lista = document.getElementById('listaExperiencia');
+    document.getElementById('agregarExp').addEventListener('click', () => {
+      const nuevo = lista.firstElementChild.cloneNode(true);
+      nuevo.querySelectorAll('input, textarea').forEach(c => c.value = '');
+      const quitar = document.createElement('button');
+      quitar.type = 'button';
+      quitar.className = 'quitar';
+      quitar.title = 'Quitar esta experiencia';
+      quitar.textContent = '✕';
+      quitar.onclick = () => nuevo.remove();
+      nuevo.appendChild(quitar);
+      lista.appendChild(nuevo);
+    });
+
+    // Al limpiar, restaurar foto y fecha
+    const form = document.getElementById('formCV');
+    form.addEventListener('reset', () => {
+      setTimeout(() => {
+        marco.textContent = 'FOTO';
+        document.getElementById('fechaFirma').valueAsDate = new Date();
+        document.getElementById('valorIngles').value = 'Ninguno';
+      });
+    });
+
+    // Envío: GitHub Pages es estático, así que se confirma la recepción en pantalla
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      const datos = new FormData(form);
+      const msg = document.getElementById('mensaje');
+      msg.innerHTML = '<strong>¡Currículo recibido!</strong><br>Gracias, ' +
+        datos.get('nombre') + ' ' + datos.get('apellidos') +
+        '. Nos comunicaremos con usted al correo <em>' + datos.get('email') + '</em>.';
+      msg.style.display = 'block';
+      msg.scrollIntoView({ behavior: 'smooth' });
+    });
+  </script>
+</body>
+</html>
